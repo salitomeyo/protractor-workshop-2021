@@ -1,44 +1,67 @@
-import { $, browser } from 'protractor';
-import { MenuContentPage } from '../src/page';
-
+import { browser } from 'protractor';
+import {
+  MenuContentPage,
+  ProductListPage,
+  ProductAddedModalPage,
+  SummaryStepPage,
+  SignInStepPage,
+  AddressStepPage,
+  ShippingStepPage,
+  PaymentStepPage,
+  BankPaymentPage,
+  OrderSummaryPage,
+} from '../src/page';
 describe('Buy a t-shirt', () => {
-  const menuContentPage: MenuContentPage = new MenuContentPage();
-  beforeEach(() => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 500000;
+  const menuContentPage = new MenuContentPage();
+  const productListPage = new ProductListPage();
+  const productAddedModalPage = new ProductAddedModalPage();
+  const summaryStepPage = new SummaryStepPage();
+  const signInStepPage = new SignInStepPage();
+  const addressStepPage = new AddressStepPage();
+  const shippingStepPage = new ShippingStepPage();
+  const paymentStepPage = new PaymentStepPage();
+  const bankPaymentPage = new BankPaymentPage();
+  const orderSummaryPage = new OrderSummaryPage();
+
+  describe('given a online shop', () => {
+    it('Open page ', async () => {
+      await browser.get('http://automationpractice.com/');
+    });
   });
 
-  it('then should be bought a t-shirt', async () => {
-    await browser.get('http://automationpractice.com/');
-    await(browser.sleep(3000));
-    await menuContentPage.goToTShirtMenu();
-    await $('#block_top_menu > ul > li:nth-child(3) > a').click();
-    await(browser.sleep(10000));
-    await $('#center_column a.button.ajax_add_to_cart_button.btn.btn-default').click();
-    await(browser.sleep(10000));
-    await $('#layer_cart > div.clearfix > div.layer_cart_cart.col-xs-12.col-md-6 > div.button-container > a').click();
-    await(browser.sleep(10000));
-    await $('#center_column > p.cart_navigation.clearfix > a.button.btn.btn-default.standard-checkout.button-medium').click();
-    await(browser.sleep(10000));
+  describe('then should select a t-shirt', () => {
+    it('pick t-shirt', async () => {
+      await menuContentPage.goToTShirtMenu();
+      await productListPage.addToCartClick();
+    });
+  });
 
-    await $('#email').sendKeys('aperdomobo@gmail.com');
-    await $('#passwd').sendKeys('WorkshopProtractor');
-    await $('#SubmitLogin > span').click();
-    await(browser.sleep(10000));
+  describe('then should checkout', () => {
+    it('go to checkout process', async () => {
+      await productAddedModalPage.goToCheckout();
+      await summaryStepPage.goToCheckout;
+    });
+  });
 
-    await $('#center_column > form > p > button > span').click();
-    await(browser.sleep(10000));
+  describe('then should login', () => {
+    it('fill email, and password', async () => {
+      await signInStepPage.fillSignIn();
+      await signInStepPage.login();
+    });
+  });
+  describe('should select default address', () => {
+    it('pick address', async () => {
+      await addressStepPage.goToCheckout();
+      await shippingStepPage.acceptTermsClick();
+      await shippingStepPage.goToCheckout();
+    });
+  });
 
-    await $('#cgv').click();
-    await(browser.sleep(10000));
-
-    await $('#form > p > button > span').click();
-    await(browser.sleep(10000));
-    await $('#HOOK_PAYMENT > div:nth-child(1) > div > p > a').click();
-    await(browser.sleep(10000));
-    await $('#cart_navigation > button > span').click();
-    await(browser.sleep(10000));
-
-    await expect($('#center_column > div > p > strong').getText())
-      .toBe('Your order on My Store is complete.');
+  describe('should pay via bank wire', () => {
+    it('then should be bought a t-shirt', async () => {
+      await paymentStepPage.payByBankWireClick();
+      await bankPaymentPage.goToConfirmOrder();
+      await orderSummaryPage.getConfirmationMessage();
+    });
   });
 });

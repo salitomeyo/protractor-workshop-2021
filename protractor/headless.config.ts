@@ -7,6 +7,7 @@ export const config: Config = {
   SELENIUM_PROMISE_MANAGER: false,
   onPrepare: () => {
     browser.ignoreSynchronization = true;
+    browser.manage().timeouts().implicitlyWait(3000);
     reporter();
   },
   capabilities: {
@@ -15,5 +16,8 @@ export const config: Config = {
       args: ['--headless', '--disable-gpu']
     }
   },
-  getPageTimeout: 30000
+  getPageTimeout: 30000,
+  jasmineNodeOpts: {
+    defaultTimeoutInterval: 120000
+  }
 };
