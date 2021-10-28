@@ -1,20 +1,23 @@
 import { $, browser } from 'protractor';
+import { MenuContentPage } from '../src/page';
 
 describe('Buy a t-shirt', () => {
+  const menuContentPage: MenuContentPage = new MenuContentPage();
   beforeEach(() => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 500000;
   });
 
   it('then should be bought a t-shirt', async () => {
     await browser.get('http://automationpractice.com/');
-    await(browser.sleep(20000));
+    await(browser.sleep(3000));
+    await menuContentPage.goToTShirtMenu();
     await $('#block_top_menu > ul > li:nth-child(3) > a').click();
     await(browser.sleep(10000));
-    await $('#homefeatured > li.ajax_block_product.col-xs-12.col-sm-4.col-md-3.first-in-line.first-item-of-tablet-line.first-item-of-mobile-line > div > div.right-block > div.button-container > a.button.ajax_add_to_cart_button.btn.btn-default').click();
+    await $('#center_column a.button.ajax_add_to_cart_button.btn.btn-default').click();
     await(browser.sleep(10000));
-    await $('[style*="display: block;"] .button-container > a').click();
+    await $('#layer_cart > div.clearfix > div.layer_cart_cart.col-xs-12.col-md-6 > div.button-container > a').click();
     await(browser.sleep(10000));
-    await $('.cart_navigation span').click();
+    await $('#center_column > p.cart_navigation.clearfix > a.button.btn.btn-default.standard-checkout.button-medium').click();
     await(browser.sleep(10000));
 
     await $('#email').sendKeys('aperdomobo@gmail.com');
